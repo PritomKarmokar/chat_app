@@ -36,6 +36,8 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "corsheaders",
+    "django_extensions",
+    "cid.apps.CidAppConfig",
 ]
 
 # Add In House project apps here
@@ -46,6 +48,7 @@ PROJECT_APPS = [
 INSTALLED_APPS =  DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
+    'cid.middleware.CidMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -160,3 +163,55 @@ CORS_ALLOWED_HEADERS = [
     'x-api-key',         # Custom authentication header
 ]
 # CORS CONFIG END #
+
+# django-correlation-id config
+CID_GENERATE = True
+CID_HEADER = 'HTTP_X_REQUEST_ID'
+CID_RESPONSE_HEADER = 'X-Request-ID'
+# django-correlation-id config end
+
+# LOGGING SETUP Starts
+LOG_LEVEL = env.str('LOG_LEVEL', default='DEBUG')
+LOGGER_ROOT_NAME = env.str('LOGGER_ROOT_NAME', default='chat_app')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '[cid: {cid}] | {asctime} | {levelname} | {pathname}:{lineno} | {message}',
+            'style': '{',
+            'datefmt': "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+            'filters': ['correlation'],
+        },
+    },
+    'filters': {
+        'correlation': {
+            '()': 'cid.log.CidContextFilter'
+        },
+    },
+    'loggers': {
+        LOGGER_ROOT_NAME: {
+            'level': LOG_LEVEL,
+            'handlers': ['console'],
+            'propagate': False,
+            'filters': ['correlation'],
+        },
+
+        'general': {
+            'handlers': ['console'],
+            'level': LOG_LEVEL,
+            'propagate': False,
+        },
+    },
+}
+# LOGGER Setup End
+
+REQUEST_TIMEOUT = env.int("REQUEST_TIMEOUT", 10)
