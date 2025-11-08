@@ -35,6 +35,7 @@ DJANGO_APPS = [
 # Add third party apps here
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "corsheaders",
 ]
 
 # Add In House project apps here
@@ -45,6 +46,7 @@ PROJECT_APPS = [
 INSTALLED_APPS =  DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,6 +120,8 @@ TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 
@@ -130,3 +134,29 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS Config
+CORS_ORIGIN_ALLOW_ALL = True # Only for development testing - never use in production
+CORS_ALLOWED_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',  # Always required for preflight requests
+    'PATCH',
+    'POST',
+    'PUT',
+]
+# Allowed headers in CORS requests
+# Note: Header names are case-insensitive, lowercase is conventional
+CORS_ALLOWED_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',      # Essential for token-based authentication
+    'content-type',       # Required for JSON requests
+    'dnt',               # Do Not Track - user privacy preference header
+    'origin',            # Standard CORS header
+    'user-agent',        # Standard browser header
+    'x-csrftoken',       # Django CSRF token
+    'x-requested-with',  # Common AJAX header
+    'x-api-key',         # Custom authentication header
+]
+# CORS CONFIG END #
