@@ -42,10 +42,12 @@ THIRD_PARTY_APPS = [
 
 # Add In House project apps here
 PROJECT_APPS = [
-
+    "users",
 ]
 
 INSTALLED_APPS =  DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
+
+AUTH_USER_MODEL = "users.User"
 
 MIDDLEWARE = [
     'cid.middleware.CidMiddleware',

@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+service_name = 'chat_app'
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(f'{service_name}/admin/', admin.site.urls),
 ]
